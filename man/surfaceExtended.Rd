@@ -40,6 +40,12 @@ SURFACE and OUwie. Default is \code{TRUE}.}
 \item{fwd_surface}{Optional. List of models obtained using the backwards
 phase of SURFACE. Only used to produce a more thorough comparison of models
 when \code{plot=TRUE}.}
+
+\item{lb}{Lower bounds, as in OUwie. Only needed in case of an error due to 
+SURFACE parameters being outside OUwie's bounds.}
+
+\item{ub}{Upper bounds, as in OUwie. Only needed in case of an error due to
+SURFACE parameters being outside OUwie's bounds.}
 }
 \value{
 A list with the following elements:
@@ -114,7 +120,7 @@ complexity (number of regimes) of the starting model.
   OUmodels <- surfaceExtended(bwd_surface = echinoid_data$bwd_surface, data =
    echinoid_data$size, tree = echinoid_data$tree, error = echinoid_data$error,
    models = 'OUMVAZ', limit = 4, plot = T, fwd_surface =
-   echinoid_data$fwd_surface)
+   echinoid_data$fwd_surface, lb=NULL, ub=NULL)
  }
 
 }
@@ -124,7 +130,7 @@ Beaulieu J.M., Jhuwueng D.‐C., Boettiger C., O'Meara B.C. 2012. Modeling stabi
  Ho L.S.T, Ané C. 2014. Intrinsic inference difficulties for trait evolution with Ornstein‐Uhlenbeck models. Methods in Ecology & Evolution, 5:1133–1146.
  Ingram T., Mahler D.L. 2013. SURFACE: detecting convergent evolution from comparative data by fitting Ornstein‐Uhlenbeck models with stepwise Akaike Information Criterion. Methods in Ecology & Evolution, 4:416–425.
  Khabbazian M., Kriebel R., Rohe K., Ané, C. 2016. Fast and accurate detection of evolutionary shifts in Ornstein‐Uhlenbeck models. Methods in Ecology & Evolution, 7:811–824.
- Mongiardino Koch N. 2021. Exploring adaptive landscapes across deep time:  A case study using echinoid body size. Evolution, https://doi.org/10.1111/evo.14219.
+ Mongiardino Koch N., Thompson J.R. A Total-Evidence Dated Phylogeny of Echinoids and the Evolution of Body Size across Adaptive Landscape. bioRxiv 2020.02.13.947796, doi.org/10.1101/2020.02.13.947796.
 }
 \seealso{
 For details on how these models are fit visit
