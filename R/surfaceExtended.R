@@ -64,6 +64,10 @@
 #' @param fwd_surface Optional. List of models obtained using the backwards
 #'   phase of SURFACE. Only used to produce a more thorough comparison of models
 #'   when \code{plot=TRUE}.
+#' @param lb Lower bounds, as in OUwie. Only needed in case of an error due to 
+#'   SURFACE parameters being outside OUwie's bounds.
+#' @param ub Upper bounds, as in OUwie. Only needed in case of an error due to
+#'  SURFACE parameters being outside OUwie's bounds.
 #' @return A list with the following elements:
 #'  \describe{
 #'    \item{$ext_surface}{A list containing all the models explored by extending
@@ -100,7 +104,7 @@
 #'   OUmodels <- surfaceExtended(bwd_surface = echinoid_data$bwd_surface, data =
 #'    echinoid_data$size, tree = echinoid_data$tree, error = echinoid_data$error,
 #'    models = 'OUMVAZ', limit = 4, plot = T, fwd_surface =
-#'    echinoid_data$fwd_surface)
+#'    echinoid_data$fwd_surface, lb=NULL, ub=NULL)
 #'  }
 #'
 
@@ -193,7 +197,7 @@ surfaceExtended <- function(bwd_surface, data, tree, error = NA, models = c('OUM
       ouwie_result <- OUwie::OUwie(tree_ouwie, data_ouwie, model = gsub('Z', '', models[i]), simmap.tree = F,
                                    root.age = tree_ouwie$root.time, scaleHeight = F, root.station = F,
                                    get.root.theta = estimate.theta[i], clade = NULL, mserr = mserr, shift.point = 0.5,
-                                   starting.vals = NULL, algorithm = algorithm, quiet = T, diagn = T, warn = F)
+                                   starting.vals = NULL, algorithm = algorithm, quiet = T, diagn = T, warn = F, lb=lb, ub=ub)
 
       model_name <- paste(number_of_regimes, models[i], sep = '_')
       assign(model_name, ouwie_result)
