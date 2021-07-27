@@ -109,7 +109,7 @@
 #'
 
 surfaceExtended <- function(bwd_surface, data, tree, error = NA, models = c('OUMVA', 'OUMVAZ'),
-                           limit = 2, plot = T, fwd_surface = NA) {
+                           limit = 2, plot = T, fwd_surface = NA, lb=NULL, ub=NULL) {
 
   #Initial setup
   bwd_surface2 <- bwd_surface
