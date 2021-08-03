@@ -39,7 +39,7 @@ extended_surfaceAICPlot <- function(ext_surface, summary, fwd_surface = NA) {
   model_type <- c()
   for(i in 1:length(models)) {
     model_results <- summary[endsWith(as.character(summary$model), models[i]),]
-    model_results <- model_results[which(!is.na(model_results$AICC)),]
+    model_results <- model_results[which(!is.na(model_results$AICc)),]
     if(nrow(model_results) == 0) {
       pch <- pch[-i]
       col <- col[-i]
@@ -47,7 +47,7 @@ extended_surfaceAICPlot <- function(ext_surface, summary, fwd_surface = NA) {
     } else {
       nreg_extended <- c(nreg_extended, as.numeric(gsub('_.*$', '', model_results$model)))
       model_type <- c(model_type, gsub('^.*_', '', model_results$model))
-      aics_extended <- c(aics_extended, model_results$AICC)
+      aics_extended <- c(aics_extended, model_results$AICc)
     }
   }
 

@@ -137,9 +137,10 @@ surfaceExtended <- function(bwd_surface, data, tree, error = NA, models = c('OUM
   ###Set up summary of results
   num_models <- length(all_regimes)*length(models)
   summary <- data.frame(model = paste(rep(all_regimes, each = length(models)), models, sep = '_'),
-                       worked = rep(F, num_models), AICC = rep(NA, num_models))
+                       worked = rep(F, num_models), AICc = rep(NA, num_models))
 
   while(number_of_regimes >= limit) {
+	  print(paste('Number of regimes:', number_of_regimes))
 
     #Prepare the data to fit models to the results of surfaceBackwards
     if(number_of_regimes == as.numeric(bwd_surface[[length(bwd_surface)]]$n_regimes[2])) {
@@ -174,7 +175,7 @@ surfaceExtended <- function(bwd_surface, data, tree, error = NA, models = c('OUM
         bwd_surface2[[(length(bwd_surface2)+1)]] <- bwd_surface3[[(length(bwd_surface3))]]
       }
 
-      number_of_regimes <- as.numeric(bwd_surface2[[length(bwd_surface2)]]$n_regimes[2])
+      #number_of_regimes <- as.numeric(bwd_surface2[[length(bwd_surface2)]]$n_regimes[2])
       cat('Testing', paste(models, collapse = ' and '), 'with', number_of_regimes, 'regimes','\n')
 
       #get regimes from surface object and map them on the data and the tree
@@ -193,35 +194,38 @@ surfaceExtended <- function(bwd_surface, data, tree, error = NA, models = c('OUM
 
     #Fit models with OUwie and make summary of results
     for(i in 1:length(models)) {
+		print(paste('Model:', models[i]))
       algorithm <- ifelse(length(tree_ouwie$tip.label) > 500, 'three.point', 'invert')
       ouwie_result <- OUwie::OUwie(tree_ouwie, data_ouwie, model = gsub('Z', '', models[i]), simmap.tree = F,
                                    root.age = tree_ouwie$root.time, scaleHeight = F, root.station = F,
                                    get.root.theta = estimate.theta[i], clade = NULL, mserr = mserr, shift.point = 0.5,
                                    starting.vals = NULL, algorithm = algorithm, quiet = T, diagn = T, warn = F, lb=lb, ub=ub)
-
+	print(ouwie_result)
       model_name <- paste(number_of_regimes, models[i], sep = '_')
       assign(model_name, ouwie_result)
 
       if(all(ouwie_result$eigval > 0)) {
         summary[which(summary$model == model_name),'worked'] <- T
-        summary[which(summary$model == model_name),'AICC'] <- ouwie_result$AICc
+        summary[which(summary$model == model_name),'AICc'] <- ouwie_result$AICc
       }
     }
 
     number_of_regimes <- number_of_regimes - 1
+	print(paste("Number of regimes after loop:", number_of_regimes))
   }
 
   #Report on best models found
   results <- rep(T, length(models))
   for(i in 1:length(models)) {
     model_results <- summary[endsWith(as.character(summary$model), models[i]),]
-    model_results <- model_results[which(!is.na(model_results$AICC)),]
+    model_results <- model_results[which(!is.na(model_results$AICc)),]
     if(nrow(model_results) == 0) {
       results[i] <- F
       cat('For', models[i], 'no reliable model could be fit', '\n')
     } else {
+		print(model_results[,'AICc'])
       assign(paste0('best_', models[i]),
-             get(as.character(model_results[which(model_results[,'AICC'] == min(model_results[,'AICC'])),'model'])))
+             get(as.character(model_results[which(model_results[,'AICc'] == min(model_results[,'AICc'])),'model'])[1]))
 
       cat('For', models[i], 'a', substr(as.character(model_results[1,1]), 1, 1),
             'regime solution was the best, with AICc =', get(paste0('best_', models[i]))$AICc, '\n')
