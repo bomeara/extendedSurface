@@ -68,6 +68,7 @@
 #'   SURFACE parameters being outside OUwie's bounds.
 #' @param ub Upper bounds, as in OUwie. Only needed in case of an error due to
 #'  SURFACE parameters being outside OUwie's bounds.
+#' @param algorithm Choose one of "invert" or "three.point" (see OUwie documentation).
 #' @return A list with the following elements:
 #'  \describe{
 #'    \item{$ext_surface}{A list containing all the models explored by extending
@@ -109,7 +110,7 @@
 #'
 
 surfaceExtended <- function(bwd_surface, data, tree, error = NA, models = c('OUMVA', 'OUMVAZ'),
-                           limit = 2, plot = T, fwd_surface = NA, lb=NULL, ub=NULL) {
+                           limit = 2, plot = T, fwd_surface = NA, lb=NULL, ub=NULL, algorithm="invert") {
 
   #Initial setup
   bwd_surface2 <- bwd_surface
@@ -196,9 +197,9 @@ surfaceExtended <- function(bwd_surface, data, tree, error = NA, models = c('OUM
     for(i in 1:length(models)) {
 		print(paste('Model:', models[i]))
       #algorithm <- ifelse(length(tree_ouwie$tip.label) > 500, 'three.point', 'invert')
-      algorithm <- 'three.point'  
+      #algorithm <- 'three.point'  
       ouwie_result <- OUwie::OUwie(tree_ouwie, data_ouwie, model = gsub('Z', '', models[i]), simmap.tree = F,
-                                   root.age = tree_ouwie$root.time, scaleHeight = TRUE, root.station = F,
+                                   root.age = tree_ouwie$root.time, scaleHeight = FALSE, root.station = F,
                                    get.root.theta = estimate.theta[i], clade = NULL, mserr = mserr, shift.point = 0.5,
                                    starting.vals = NULL, algorithm = algorithm, quiet = T, diagn = T, warn = F, lb=lb, ub=ub)
 	print(ouwie_result)

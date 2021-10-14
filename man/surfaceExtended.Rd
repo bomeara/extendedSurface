@@ -12,7 +12,10 @@ surfaceExtended(
   models = c("OUMVA", "OUMVAZ"),
   limit = 2,
   plot = T,
-  fwd_surface = NA
+  fwd_surface = NA,
+  lb = NULL,
+  ub = NULL,
+  algorithm = "invert"
 )
 }
 \arguments{
@@ -46,6 +49,8 @@ SURFACE parameters being outside OUwie's bounds.}
 
 \item{ub}{Upper bounds, as in OUwie. Only needed in case of an error due to
 SURFACE parameters being outside OUwie's bounds.}
+
+\item{algorithm}{Choose one of "invert" or "three.point" (see OUwie documentation).}
 }
 \value{
 A list with the following elements:
