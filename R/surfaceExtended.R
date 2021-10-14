@@ -198,7 +198,7 @@ surfaceExtended <- function(bwd_surface, data, tree, error = NA, models = c('OUM
       #algorithm <- ifelse(length(tree_ouwie$tip.label) > 500, 'three.point', 'invert')
       algorithm <- 'three.point'  
       ouwie_result <- OUwie::OUwie(tree_ouwie, data_ouwie, model = gsub('Z', '', models[i]), simmap.tree = F,
-                                   root.age = tree_ouwie$root.time, scaleHeight = F, root.station = F,
+                                   root.age = tree_ouwie$root.time, scaleHeight = TRUE, root.station = F,
                                    get.root.theta = estimate.theta[i], clade = NULL, mserr = mserr, shift.point = 0.5,
                                    starting.vals = NULL, algorithm = algorithm, quiet = T, diagn = T, warn = F, lb=lb, ub=ub)
 	print(ouwie_result)
